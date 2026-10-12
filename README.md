@@ -77,9 +77,10 @@ two pushed digests into one index (explicit `--os linux --arch amd64` and
 `skopeo inspect --raw`, and only then moves `latest`.
 
 Publishing uses the workflow's `GITHUB_TOKEN` with `packages: write`; no extra
-registry secret is stored. GHCR **package** visibility is separate from
-repository visibility: the first published package defaults to private and must
-be switched to public in the package settings for anonymous pulls.
+registry secret is stored. Because the build sets
+`org.opencontainers.image.source`, GHCR links the package to this repository and
+it inherits the repository's access permissions, so a public repository yields a
+publicly pullable package with no manual visibility change.
 
 ## Tests
 
