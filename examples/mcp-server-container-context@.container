@@ -1,5 +1,5 @@
 [Unit]
-Description=A MCP server in container, providing isolated execution context
+Description=An MCP server in container, providing isolated execution context
 After=network-online.target
 Wants=network-online.target
 
