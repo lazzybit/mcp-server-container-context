@@ -6,10 +6,6 @@ Wants=network-online.target
 [Container]
 ContainerName=mcp-server-container-context-%i
 Image=ghcr.io/lazzybit/mcp-server-container-context:latest
-Environment=TEAM_DOMAIN=team-name.cloudflareaccess.com
-Environment=APPLICATION_AUD=your-access-application-aud-tag
-Environment=MCP_DOMAIN=mcp.example.com
-Environment=LOG_LEVEL=info
 
 # Network=cloudflare-tunnel.network
 
