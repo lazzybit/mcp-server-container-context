@@ -103,13 +103,18 @@ session identity/cancellation/isolation.
 
 - **Executed and green:** `npm run typecheck`, `npm run build`, `npm test`
   (110 tests, 8 files).
-- **Not executed — the GitHub Actions image pipeline has not run yet:** both
-  architecture builds, the `/healthz` smoke test, the manifest push, and the
-  `skopeo` platform assertion. The workflow is added in this change; its first
-  run is the verification.
-- **Not executed — no container runtime available here:** building and running
-  `Containerfile`, PID 1 behaviour, image contents, `/healthz` and
-  `/mcp` inside the image, SIGTERM shutdown.
+- **Executed and green — GitHub Actions image pipeline (run
+  [38253124242](https://github.com/lazzybit/mcp-server-container-context/actions/runs/38253124242)):**
+  both architectures built natively on their runners, both `/healthz` smoke
+  tests passed, the per-architecture images were pushed, and the
+  `sha-<full SHA>` and `latest` manifests were assembled, pushed, and asserted
+  by `skopeo inspect --raw` to contain one `linux/amd64` and one `linux/arm64`
+  (`variant: v8`) entry.
+- **Not executed — no container runtime available here:** a local container
+  build, PID 1 signal handling and SIGTERM shutdown, and `/mcp` inside the image
+  (which needs a valid Cloudflare Access assertion). The pipeline's smoke test
+  does build and run the image, but it only reaches the unauthenticated
+  `/healthz`.
 - **Not executed — no Zero Trust environment available:** live Cloudflare
   Access acceptance (browser login, opaque token, assertion forwarding, policy
   denial, long SSE limits).
