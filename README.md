@@ -5,7 +5,7 @@ A remote MCP controller that exposes exactly four tools — `read`, `write`,
 Streamable HTTP, is reached through Cloudflare Access with Managed OAuth, and
 validates the Cloudflare Access assertion itself before any tool runs.
 
-The only build artifact that matters is [`container/Containerfile`](container/Containerfile).
+The only build artifact that matters is [`Containerfile`](Containerfile).
 
 ```text
 MCP client → Cloudflare Access (login, OAuth, policy) → container :8000
@@ -48,7 +48,7 @@ TEAM_DOMAIN=... APPLICATION_AUD=... MCP_DOMAIN=... npm start
 The container runs the controller as PID 1 with no init:
 
 ```bash
-docker build -f container/Containerfile -t mcp-server-container-context .
+docker build -f Containerfile -t mcp-server-container-context .
 docker run --rm -p 8000:8000 \
   -e TEAM_DOMAIN=team-name.cloudflareaccess.com \
   -e APPLICATION_AUD=your-aud-tag \
@@ -79,7 +79,7 @@ session identity/cancellation/isolation.
 - **Executed and green:** `npm run typecheck`, `npm run build`, `npm test`
   (110 tests, 8 files).
 - **Not executed — no container runtime available here:** building and running
-  `container/Containerfile`, PID 1 behaviour, image contents, `/healthz` and
+  `Containerfile`, PID 1 behaviour, image contents, `/healthz` and
   `/mcp` inside the image, SIGTERM shutdown.
 - **Not executed — no Zero Trust environment available:** live Cloudflare
   Access acceptance (browser login, opaque token, assertion forwarding, policy
