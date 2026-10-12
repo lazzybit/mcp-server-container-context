@@ -3,7 +3,8 @@ import { createRemoteJWKSet, type JWTVerifyGetKey } from "jose";
 /**
  * A JWKS key resolver. The verifier takes one of these so tests can inject a
  * local fixture; production constructs the remote provider from
- * `TEAM_DOMAIN`. There is no configuration path that disables verification.
+ * `CLOUDFLARE_ACCESS_TEAM_DOMAIN`. There is no configuration path that disables
+ * verification.
  */
 export type JwksProvider = JWTVerifyGetKey;
 

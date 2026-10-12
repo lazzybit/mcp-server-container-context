@@ -60,8 +60,8 @@ jobs:
           set -euo pipefail
           image="$IMAGE:sha-$GITHUB_SHA-${{ matrix.arch }}"
           podman run --detach --name smoke -p 8000:8000 \
-            -e TEAM_DOMAIN=localhost \
-            -e APPLICATION_AUD=smoke \
+            -e CLOUDFLARE_ACCESS_TEAM_DOMAIN=localhost \
+            -e CLOUDFLARE_ACCESS_APPLICATION_AUD=smoke \
             -e MCP_DOMAIN=localhost \
             "$image"
           ready=0

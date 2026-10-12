@@ -23,8 +23,8 @@ switch.
 
 | Variable | Required | Default | Purpose |
 | -------- | -------- | ------- | ------- |
-| `TEAM_DOMAIN` | yes | — | Bare team domain, e.g. `team-name.cloudflareaccess.com`. Issuer `https://<TEAM_DOMAIN>`, JWKS `https://<TEAM_DOMAIN>/cdn-cgi/access/certs`. |
-| `APPLICATION_AUD` | yes | — | Access application AUD tag (`aud` claim). |
+| `CLOUDFLARE_ACCESS_TEAM_DOMAIN` | yes | — | Bare team domain, e.g. `team-name.cloudflareaccess.com`. Issuer `https://<CLOUDFLARE_ACCESS_TEAM_DOMAIN>`, JWKS `https://<CLOUDFLARE_ACCESS_TEAM_DOMAIN>/cdn-cgi/access/certs`. |
+| `CLOUDFLARE_ACCESS_APPLICATION_AUD` | yes | — | Access application AUD tag (`aud` claim). |
 | `MCP_DOMAIN` | yes | — | Bare public host, e.g. `mcp.example.com`; used for `Host`/`Origin` checks. |
 | `MCP_HOST` | no | `0.0.0.0` | Listen host. |
 | `MCP_PORT` | no | `8000` | Listen port. |
@@ -42,7 +42,7 @@ discovery. An unauthenticated non-browser request gets `401` with
 npm ci
 npm run typecheck
 npm run build
-TEAM_DOMAIN=... APPLICATION_AUD=... MCP_DOMAIN=... npm start
+CLOUDFLARE_ACCESS_TEAM_DOMAIN=... CLOUDFLARE_ACCESS_APPLICATION_AUD=... MCP_DOMAIN=... npm start
 ```
 
 The container runs the controller as PID 1 with no init:
@@ -50,8 +50,8 @@ The container runs the controller as PID 1 with no init:
 ```bash
 docker build -f Containerfile -t mcp-server-container-context .
 docker run --rm -p 8000:8000 \
-  -e TEAM_DOMAIN=team-name.cloudflareaccess.com \
-  -e APPLICATION_AUD=your-aud-tag \
+  -e CLOUDFLARE_ACCESS_TEAM_DOMAIN=team-name.cloudflareaccess.com \
+  -e CLOUDFLARE_ACCESS_APPLICATION_AUD=your-aud-tag \
   -e MCP_DOMAIN=mcp.example.com \
   mcp-server-container-context
 ```

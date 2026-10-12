@@ -35,7 +35,7 @@ const DEFAULT_PORT = 8000;
 const DEFAULT_WORKSPACE_DIR = "/workspace";
 const DEFAULT_SESSION_SWEEP_MS = 0;
 
-/** Strip a leading scheme and trailing slashes so `TEAM_DOMAIN` stays bare. */
+/** Strip a leading scheme and trailing slashes so configured domains stay bare. */
 function bareDomain(raw: string, variable: string): string {
   let value = raw.trim();
   value = value.replace(/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//, "");
@@ -66,8 +66,11 @@ function parseInteger(raw: string, variable: string, min: number, max: number): 
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
-  const teamDomain = bareDomain(requireString(env, "TEAM_DOMAIN"), "TEAM_DOMAIN");
-  const applicationAud = requireString(env, "APPLICATION_AUD");
+  const teamDomain = bareDomain(
+    requireString(env, "CLOUDFLARE_ACCESS_TEAM_DOMAIN"),
+    "CLOUDFLARE_ACCESS_TEAM_DOMAIN",
+  );
+  const applicationAud = requireString(env, "CLOUDFLARE_ACCESS_APPLICATION_AUD");
   const mcpDomain = bareDomain(requireString(env, "MCP_DOMAIN"), "MCP_DOMAIN");
 
   const host = env["MCP_HOST"]?.trim() || DEFAULT_HOST;

@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import { ConfigError, loadConfig } from "../../src/config.js";
 
 const base = {
-  TEAM_DOMAIN: "team-name.cloudflareaccess.com",
-  APPLICATION_AUD: "aud-tag",
+  CLOUDFLARE_ACCESS_TEAM_DOMAIN: "team-name.cloudflareaccess.com",
+  CLOUDFLARE_ACCESS_APPLICATION_AUD: "aud-tag",
   MCP_DOMAIN: "mcp.example.com",
 };
 
@@ -21,8 +21,11 @@ describe("loadConfig", () => {
     expect(config.sessionSweepMs).toBe(0);
   });
 
-  it("strips a leading scheme and trailing slash from TEAM_DOMAIN", () => {
-    const config = loadConfig({ ...base, TEAM_DOMAIN: "https://team-name.cloudflareaccess.com/" });
+  it("strips a leading scheme and trailing slash from CLOUDFLARE_ACCESS_TEAM_DOMAIN", () => {
+    const config = loadConfig({
+      ...base,
+      CLOUDFLARE_ACCESS_TEAM_DOMAIN: "https://team-name.cloudflareaccess.com/",
+    });
     expect(config.teamDomain).toBe("team-name.cloudflareaccess.com");
     expect(config.issuer).toBe("https://team-name.cloudflareaccess.com");
   });
@@ -41,7 +44,7 @@ describe("loadConfig", () => {
     expect(config.sessionSweepMs).toBe(5000);
   });
 
-  it.each(["TEAM_DOMAIN", "APPLICATION_AUD", "MCP_DOMAIN"] as const)(
+  it.each(["CLOUDFLARE_ACCESS_TEAM_DOMAIN", "CLOUDFLARE_ACCESS_APPLICATION_AUD", "MCP_DOMAIN"] as const)(
     "rejects a missing %s",
     (variable) => {
       const env: NodeJS.ProcessEnv = { ...base };
@@ -51,13 +54,15 @@ describe("loadConfig", () => {
   );
 
   it("rejects an empty required value", () => {
-    expect(() => loadConfig({ ...base, APPLICATION_AUD: "   " })).toThrow(ConfigError);
-  });
-
-  it("rejects a TEAM_DOMAIN that is not a bare host", () => {
-    expect(() => loadConfig({ ...base, TEAM_DOMAIN: "https://team.example.com/path" })).toThrow(
+    expect(() => loadConfig({ ...base, CLOUDFLARE_ACCESS_APPLICATION_AUD: "   " })).toThrow(
       ConfigError,
     );
+  });
+
+  it("rejects a CLOUDFLARE_ACCESS_TEAM_DOMAIN that is not a bare host", () => {
+    expect(() =>
+      loadConfig({ ...base, CLOUDFLARE_ACCESS_TEAM_DOMAIN: "https://team.example.com/path" }),
+    ).toThrow(ConfigError);
   });
 
   it.each([["0"], ["65536"], ["abc"], ["-1"], ["80.5"]])("rejects a malformed MCP_PORT %s", (port) => {
