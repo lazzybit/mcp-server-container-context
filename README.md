@@ -56,6 +56,31 @@ docker run --rm -p 8000:8000 \
   mcp-server-container-context
 ```
 
+### Pipeline
+
+`.github/workflows/image.yml` builds `Containerfile` with Podman on the two
+native GitHub-hosted runners and publishes a manifest list to
+`ghcr.io/lazzybit/mcp-server-container-context`.
+
+| | |
+| --- | --- |
+| Platforms | `linux/amd64` (`ubuntu-24.04`), `linux/arm64/v8` (`ubuntu-24.04-arm`) |
+| Triggers | push to `main`, every pull request, manual `workflow_dispatch` |
+| Tags | `sha-<full commit SHA>` always; `latest` only on `main` |
+| Pull requests | build and run the `/healthz` smoke test, publish nothing |
+
+Each matrix leg builds its architecture natively, runs the image with
+placeholder `localhost` configuration, and asserts `GET /healthz` returns
+`{"status":"ok"}` before anything is pushed. The `manifest` job assembles the
+two pushed digests into one index (explicit `--os linux --arch amd64` and
+`--os linux --arch arm64 --variant v8`), verifies the pushed index with
+`skopeo inspect --raw`, and only then moves `latest`.
+
+Publishing uses the workflow's `GITHUB_TOKEN` with `packages: write`; no extra
+registry secret is stored. GHCR **package** visibility is separate from
+repository visibility: the first published package defaults to private and must
+be switched to public in the package settings for anonymous pulls.
+
 ## Tests
 
 Tests run against the TypeScript source through Vitest and never depend on a
@@ -78,6 +103,10 @@ session identity/cancellation/isolation.
 
 - **Executed and green:** `npm run typecheck`, `npm run build`, `npm test`
   (110 tests, 8 files).
+- **Not executed — the GitHub Actions image pipeline has not run yet:** both
+  architecture builds, the `/healthz` smoke test, the manifest push, and the
+  `skopeo` platform assertion. The workflow is added in this change; its first
+  run is the verification.
 - **Not executed — no container runtime available here:** building and running
   `Containerfile`, PID 1 behaviour, image contents, `/healthz` and
   `/mcp` inside the image, SIGTERM shutdown.
